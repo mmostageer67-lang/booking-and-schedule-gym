@@ -1,6 +1,11 @@
-const express=require('express')
-const morgan=require('morgan')
-const app=express()
+const express = require('express')
+const morgan = require('morgan')
+const router = require('./routes')
+
+const app = express()
+
 app.use(express.json())
 app.use(morgan('dev'))
-module.exports=app
+app.use('/api', router)
+
+module.exports = app
