@@ -1,5 +1,5 @@
-const router=require('../users/user.model')
+const express=require('express')
+const router=express.Router()
 const { registerController } = require('./auth.controller')
-const authMiddleware=('../../middleware/auth.middleware.js')
 router.post('/register',registerController)
 module.exports=router
