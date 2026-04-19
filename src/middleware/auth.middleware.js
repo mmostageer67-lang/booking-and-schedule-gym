@@ -18,14 +18,10 @@ const protect= (req,res,next) => {
 }
 const decoded=jwt.verify(token,process.env.SECRET_JWT)
 req.user=decoded
-next()
+return next()
     } catch (error) {
-return res.status(401).json({
-    success:false,
-          message: "Unauthorized - token failed"
-
-})    }
+return next(error)
     
-    
+    }
 }
 module.exports = protect;
