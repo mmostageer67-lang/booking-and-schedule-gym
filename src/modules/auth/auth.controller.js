@@ -1,5 +1,5 @@
-const { registerSchema } = require("../../utils/validation")
 const { register } = require("./auth.service")
+const { registerSchema } = require("./auth.validation")
 
 const registerController=async (req,res,next) => {
     try {
@@ -7,8 +7,7 @@ const registerController=async (req,res,next) => {
         if (!email || !password || !name) {
   return res.status(400).json({ message: "All fields are required" })
 }
-        const validatedData=registerSchema.parse(req.body)
-        const user=await register(validatedData)
+        const user=await register(req.validatedData)
         res.status(201).json({
             success:true,
             message : "user created successfully",
