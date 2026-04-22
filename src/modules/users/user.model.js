@@ -44,14 +44,15 @@ userSchema.pre('save', async function () {
 
     this.password = await bcrypt.hash(this.password, 10)
 })
-userSchema.set('toObject',{transform:function (doc,ret) {
     
-
+const cleanTransform=(doc,ret)=>{
 ret.id=ret._id
 delete ret._id
 delete ret.password
 delete ret.__v
 
-return ret
-}})
+return ret}
+userSchema.set('toObject',{transform:cleanTransform})
+userSchema.set('toJSON',{transform:cleanTransform})
+
 module.exports=mongoose.model('User',userSchema)
