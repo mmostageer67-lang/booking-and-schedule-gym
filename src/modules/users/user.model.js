@@ -44,4 +44,14 @@ userSchema.pre('save', async function () {
 
     this.password = await bcrypt.hash(this.password, 10)
 })
+userSchema.set('toObject',{transform:function (doc,ret) {
+    
+
+ret.id=ret._id
+delete ret._id
+delete ret.password
+delete ret.__v
+
+return ret
+}})
 module.exports=mongoose.model('User',userSchema)

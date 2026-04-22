@@ -2,12 +2,14 @@ const User=require('../users/user.model')
 const register=async(userData)=>
 {
     const {email,name,password,subscription}=userData
-    const existUser=await User.findOne({email:userData.email})
+    const existUser=await User.findOne({email})
     if(existUser)
-    {
-throw new Error("user already exist");
-
+    { 
+        const err = new Error("User already exists"); 
+err.statusCode=409
+throw err
     }
+
 const user=await User.create({
     email,
     role:'client',
@@ -15,6 +17,6 @@ const user=await User.create({
     password,
     subscription
 })
-return user
+return user.toObject()
 }
 module.exports={register}
