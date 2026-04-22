@@ -17,6 +17,6 @@ const user=await User.create({
     password,
     subscription
 })
-return user.toObject()
+return user
 }
 module.exports={register}
