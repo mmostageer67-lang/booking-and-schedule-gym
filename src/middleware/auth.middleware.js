@@ -1,5 +1,6 @@
 const jwt =require ('jsonwebtoken')
-const protect= (req,res,next) => {
+const User = require('../modules/users/user.model')
+const protect= async(req,res,next) => {
     try {
       const authHeader=req.headers.authorization
         if(!authHeader||!authHeader.startsWith("Bearer "))
@@ -10,18 +11,22 @@ const protect= (req,res,next) => {
         })
     }
         const token=authHeader.split(' ')[1]
-        if (!token) {
-  return res.status(401).json({
-    success: false,
-    message: "Token missing"
-  })
-}
+     
 const decoded=jwt.verify(token,process.env.SECRET_JWT)
-req.user=decoded
-return next()
-    } catch (error) {
-return next(error)
-    
+const user=await User.findById(decoded.id).select('-password')
+  if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not found'
+      })
     }
+req.user=user
+ next()
+    }catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token failed'
+    })
+  }
 }
 module.exports = protect;
