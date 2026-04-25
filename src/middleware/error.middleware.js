@@ -1,8 +1,8 @@
 const errorMddleware=(err,req,res,next)=>
 {
-const statusCode=err.statusCode||500
+const status=err.statusCode||500
 const message=err.message||"Internal Server Error"
-return res.status(statusCode).json({
+return res.status(status).json({
     success:false,
     message:message
 })

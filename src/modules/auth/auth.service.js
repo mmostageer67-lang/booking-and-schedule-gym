@@ -11,7 +11,7 @@ throw err
     }
 
 const user=await User.create({
-    email,
+   email,
     role:'client',
     name,
     password,
