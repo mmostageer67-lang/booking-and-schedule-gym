@@ -1,6 +1,7 @@
 const User=require('../users/user.model')
 const register=async(userData)=>
 {
+    try{
     const {email,name,password,subscription}=userData
     const existUser=await User.findOne({email})
     if(existUser)
@@ -18,5 +19,8 @@ const user=await User.create({
     subscription
 })
 return user
-}
+}catch(error)
+{
+    throw error
+}}
 module.exports={register}

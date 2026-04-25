@@ -1,5 +1,4 @@
 const { register } = require("./auth.service")
-const { registerSchema } = require("./auth.validation")
 
 const registerController=async (req,res,next) => {
     try {
