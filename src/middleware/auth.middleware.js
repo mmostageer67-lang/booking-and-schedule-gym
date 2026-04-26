@@ -23,10 +23,24 @@ const user=await User.findById(decoded.id).select('-password')
 req.user=user
  next()
     }catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: 'Token failed'
-    })
+   
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token"
+      });
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired"
+      });
+    }
   }
+   return res.status(500).json({
+    success: false,
+    message: "Internal server error"
+  });
 }
 module.exports = protect;
