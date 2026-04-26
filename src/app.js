@@ -7,5 +7,10 @@ const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
 app.use('/api',routes)
+app.use((req, res, next) => {
+  const err = new Error("Route not found")
+  err.status = 404
+  next(err)
+})
 app.use(errorMddleware)
 module.exports = app

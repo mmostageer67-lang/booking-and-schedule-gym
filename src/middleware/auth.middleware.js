@@ -2,6 +2,7 @@ const jwt =require ('jsonwebtoken')
 const User = require('../modules/users/user.model')
 const protect= async(req,res,next) => {
     try {
+      
       const authHeader=req.headers.authorization
         if(!authHeader||!authHeader.startsWith("Bearer "))
     {
@@ -11,8 +12,16 @@ const protect= async(req,res,next) => {
         })
     }
         const token=authHeader.split(' ')[1]
-     
-const decoded=jwt.verify(token,process.env.SECRET_JWT)
+        let decoded
+     try{
+      
+ decoded=jwt.verify(token,process.env.SECRET_JWT)
+}catch{
+  return res.status(401).json({
+  success:false,
+  message:"Unauthorized" 
+})
+}
 const user=await User.findById(decoded.id).select('-password')
   if (!user) {
       return res.status(401).json({
@@ -21,12 +30,11 @@ const user=await User.findById(decoded.id).select('-password')
       })
     }
 req.user=user
- next()
+  return next()
     }catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: 'Token failed'
-    })
-  }
-}
+   
+
+  
+    return next (error)
+  }}
 module.exports = protect;
