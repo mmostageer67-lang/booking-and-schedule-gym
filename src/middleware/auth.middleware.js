@@ -33,8 +33,31 @@ req.user=user
   return next()
     }catch (error) {
    
+<<<<<<< HEAD
 
   
     return next (error)
   }}
 module.exports = protect;
+=======
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token"
+      });
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired"
+      });
+    }
+  }
+   return res.status(500).json({
+    success: false,
+    message: "Internal server error"
+  });
+}
+module.exports = protect;
+>>>>>>> 19714ea25d6d9517595bc2d40d2d66a3941fa981
