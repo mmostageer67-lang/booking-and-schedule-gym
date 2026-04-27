@@ -12,9 +12,9 @@ const protect= async(req,res,next) => {
         })
     }
         const token=authHeader.split(' ')[1]
-        let decoded
+              let decoded
+
      try{
-      
  decoded=jwt.verify(token,process.env.SECRET_JWT)
 }catch{
   return res.status(401).json({
@@ -32,32 +32,12 @@ const user=await User.findById(decoded.id).select('-password')
 req.user=user
   return next()
     }catch (error) {
-   
-<<<<<<< HEAD
-
+  
+ 
+ 
   
     return next (error)
   }}
-module.exports = protect;
-=======
-    if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid token"
-      });
-    }
+   
 
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({
-        success: false,
-        message: "Token expired"
-      });
-    }
-  }
-   return res.status(500).json({
-    success: false,
-    message: "Internal server error"
-  });
-}
 module.exports = protect;
->>>>>>> 19714ea25d6d9517595bc2d40d2d66a3941fa981

@@ -6,8 +6,20 @@ const errorMddleware=(err,req,res,next)=>
       message: "User already exists"
     })
   }
-const status=err.status&&err.status<500
-?err.status:500 
+    if (err.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token"
+      });
+    }
+
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired"
+      });
+    }
+const status=err.status||500
 const message=status===500?  "Internal Server Error"
     : err.message;
 return res.status(status).json({
