@@ -11,13 +11,29 @@ const register=async(userData)=>
 err.status=409
 throw err
     }
+let finalSubscription
 
+if (subscription) {
+  const start = new Date(subscription.start_date)
+
+  const expire = new Date(start)
+  expire.setDate(start.getDate() + subscription.days)
+
+  const isActive = new Date() < expire
+
+  finalSubscription = {
+    days: subscription.days,
+    start_date: start,
+    expire_date: expire,
+    isActive
+  }
+}
 const user=await User.create({
    email,
     role,
     name,
     password,
-    subscription
+    subscription:finalSubscription
 })
 return user
 }

@@ -30,11 +30,16 @@ role:
     default:'client'
 },
 subscription: {
-  plan: {
-    type: String,
-    enum: ['day','week','month','year']
+  days: {
+    type: Number,
+    min: [1, "Subscription days must be greater than 0"]
   },
-  expiresAt: Date
+  start_date: Date,
+  expire_date: Date,
+  isActive: {
+    type: Boolean,
+    default: false
+  }
 }
 },{timestamps:true})
 userSchema.pre('save', async function () {

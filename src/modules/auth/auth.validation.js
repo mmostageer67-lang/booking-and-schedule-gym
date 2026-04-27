@@ -26,7 +26,13 @@ role:z
 value=>typeof value==='string'?value.trim().toLowerCase().replace(/\s+/g,'_'):value,
 z.enum(['admin','client','super_admin']).optional().default('client')
 )
-
+,
+subscription: z.object({
+  days: z.number().int().positive("Subscription days must be greater than 0"),
+  start_date: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: "Invalid date format"
+  })
+}).optional()
 
 })
 
