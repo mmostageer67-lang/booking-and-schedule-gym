@@ -4,7 +4,13 @@ const update=async(userId,updateData)=>
     try {
         const {name,email,role,subscription,password }= updateData
 const user = await User.findByIdAndUpdate(userId,updateData,{new:true})
-user.password=new password
+
+if(!user){throw new Error("user not found");
+}
+
+if (password){
+user.password= password
+}
 await user.save()
 return user
 
