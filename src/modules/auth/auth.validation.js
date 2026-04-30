@@ -41,4 +41,4 @@ email:emailSchema,
 password:passwordSchema
 })
 
-module.exports={registerSchema,loginSchema}
+module.exports={registerSchema,loginSchema,emailSchema,passwordSchema}

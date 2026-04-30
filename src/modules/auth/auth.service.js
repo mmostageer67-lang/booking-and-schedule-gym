@@ -58,4 +58,5 @@ const login=async(userData)=>
     return {user,token}
 
 }
+
 module.exports={register,login}
