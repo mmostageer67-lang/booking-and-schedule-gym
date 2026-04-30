@@ -1,6 +1,6 @@
 const z=require('zod')
 const {emailSchema,passwordSchema}=require('../auth/auth.validation')
-const updateUserSchema=z.object({
+const updateUserValidation=z.object({
     email:emailSchema.optional(),
     password:passwordSchema.optional(),
     name:z.string().trim().min(3,"Name must be at least 3 characters").optional(),
@@ -14,4 +14,4 @@ const updateUserSchema=z.object({
   })
 }).optional()
 })
-module .exports={updateUserSchema}
+module.exports={updateUserValidation}
