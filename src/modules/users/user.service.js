@@ -1,25 +1,38 @@
 const User =require('./user.model')
 const bcrypt=require('bcryptjs')
+const buildSubscription=require('../../utils/subscription')
 const update=async(userId,updateData)=>
 {
     try {
-  if (updateData.isActive !== undefined) {
-        updateData.subscription = {
-            ...(updateData.subscription || {}),
-            isActive: updateData.isActive
+        const user=await User.findById(userId)
+
+        if(!user){
+            const err=new Error("user not found")
+            err.status=404
+            throw err
         }
-        delete updateData.isActive
-    }
 
-  if (updateData.password) {
-        updateData.password = await bcrypt.hash(updateData.password, 10)
-    }
-        const user = await User.findByIdAndUpdate(userId,updateData,{new:true})
+        const updatePayload={...updateData}
 
-if(!user){throw new Error("user not found");
-}
+        if (updatePayload.isActive !== undefined) {
+            updatePayload.subscription = {
+                ...(updatePayload.subscription || {}),
+                isActive: updatePayload.isActive
+            }
+            delete updatePayload.isActive
+        }
 
-return user
+        if (updatePayload.subscription) {
+            updatePayload.subscription=buildSubscription(updatePayload.subscription,user.subscription)
+        }
+
+        if (updatePayload.password) {
+            updatePayload.password = await bcrypt.hash(updatePayload.password, 10)
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId,updatePayload,{new:true,runValidators:true})
+
+        return updatedUser
 
     } catch (error) {
         throw(error)

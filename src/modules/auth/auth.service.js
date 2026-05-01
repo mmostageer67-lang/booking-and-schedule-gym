@@ -1,5 +1,6 @@
 const User=require('../users/user.model')
 const generateToken=require('../../utils/generateToken')
+const buildSubscription=require('../../utils/subscription')
 const register=async(userData)=>
 {
     
@@ -11,23 +12,7 @@ const register=async(userData)=>
 err.status=409
 throw err
     }
-let finalSubscription
-
-if (subscription) {
-  const start = new Date(subscription.start_date)
-
-  const expire = new Date(start)
-  expire.setDate(start.getDate() + subscription.days)
-
-  const isActive = new Date() < expire
-
-  finalSubscription = {
-    days: subscription.days,
-    start_date: start,
-    expire_date: expire,
-    isActive
-  }
-}
+const finalSubscription=buildSubscription(subscription)
 const user=await User.create({
    email,
     role,
@@ -53,6 +38,11 @@ const login=async(userData)=>
         const err=new Error("Invalid email or password")
         err.status=401
         throw err
+    }
+    if(user.subscription?.days&&user.subscription?.start_date)
+    {
+        user.subscription=buildSubscription(user.subscription)
+        await user.save()
     }
     const token=generateToken(user._id)
     return {user,token}
