@@ -1,11 +1,9 @@
 const update = require("./user.service")
-
 const updateController=async (req,res,next) => {
     try {
-        const {name ,password,email,role,subscription}=req.body
         const {id}=req.params
-const {userId}=req.user
-        const user=await update(req.params.userId,req.body)
+
+        const user=await update(id,req.validatedData)
         res.status(200).json({
             success:true,
             message:"user updated successfully",
