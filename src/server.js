@@ -2,7 +2,6 @@ require('dotenv').config({ quiet: true })
 
 const app = require('./app')
 const { connectDB, disconnectDB } = require('./config/db')
-
 const parseEnvInt = (key, defaultValue, min, max) => {
   const raw = process.env[key]
   if (raw === undefined || raw.trim() === '') return defaultValue
