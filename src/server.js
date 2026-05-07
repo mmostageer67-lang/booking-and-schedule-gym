@@ -2,6 +2,7 @@ require('dotenv').config({ quiet: true })
 
 const app = require('./app')
 const { connectDB, disconnectDB } = require('./config/db')
+
 const parseEnvInt = (key, defaultValue, min, max) => {
   const raw = process.env[key]
   if (raw === undefined || raw.trim() === '') return defaultValue
@@ -11,21 +12,9 @@ const parseEnvInt = (key, defaultValue, min, max) => {
   return parsed
 }
 
-const getPort = () => {
-  const rawPort = process.env.PORT
-  if (rawPort === undefined) return 3000
-  const trimmedPort = rawPort.trim()
-  if (trimmedPort === '') return 3000
-  const port = Number(trimmedPort)
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    throw new Error(`Invalid PORT: ${rawPort}`)
-  }
-  return port
-}
-
 const startServer = async () => {
   try {
-    const PORT = getPort()
+    const PORT = parseEnvInt('PORT', 3000, 1, 65535)
     const gracePeriod = parseEnvInt('SHUTDOWN_GRACE_PERIOD_MS', 10000, 1000, 60000)
     const keepAliveTimeout = parseEnvInt('KEEP_ALIVE_TIMEOUT_MS', 5000, 1000, 120000)
     const headersTimeout = parseEnvInt('HEADERS_TIMEOUT_MS', 6000, 1000, 120000)
