@@ -28,10 +28,12 @@ const cancelBookingController = async (req, res, next) => {
 
 const getUserBookingsController = async (req, res, next) => {
   try {
-    const bookings = await getUserBookings(req.user.id)
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20))
+    const result = await getUserBookings(req.user.id, page, limit)
     res.status(200).json({
       success: true,
-      bookings
+      ...result
     })
   } catch (error) {
     return next(error)
@@ -40,10 +42,12 @@ const getUserBookingsController = async (req, res, next) => {
 
 const getAllBookingsController = async (req, res, next) => {
   try {
-    const bookings = await getAllBookings()
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50))
+    const result = await getAllBookings(page, limit)
     res.status(200).json({
       success: true,
-      bookings
+      ...result
     })
   } catch (error) {
     return next(error)

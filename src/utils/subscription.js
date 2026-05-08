@@ -16,9 +16,9 @@ const buildSubscription = (subscription, baseSubscription) => {
     nextSubscription.start_date = new Date(nextSubscription.start_date)
   }
 
-  if (nextSubscription.days !== undefined && nextSubscription.start_date) {
+  if (nextSubscription.days !== undefined && nextSubscription.start_date instanceof Date && !isNaN(nextSubscription.start_date)) {
     const expire = new Date(nextSubscription.start_date)
-    expire.setDate(nextSubscription.start_date.getDate() + nextSubscription.days)
+    expire.setDate(expire.getDate() + nextSubscription.days)
 
     nextSubscription.expire_date = expire
     nextSubscription.isActive = new Date() < expire

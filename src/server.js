@@ -28,15 +28,17 @@ const startServer = async () => {
     server.keepAliveTimeout = keepAliveTimeout
     server.headersTimeout = headersTimeout
 
-    server.on('error', (error) => {
+    server.on('error', async (error) => {
       console.error('Server error:', error.message)
+      await disconnectDB().catch(() => {})
       process.exit(1)
     })
 
     let isShuttingDown = false
 
-    const forceShutdown = () => {
+    const forceShutdown = async () => {
       console.error('Grace period exceeded. Force closing server...')
+      await disconnectDB().catch(() => {})
       process.exit(1)
     }
 
@@ -70,5 +72,14 @@ const startServer = async () => {
     process.exit(1)
   }
 }
+
+process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason)
+})
+
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err)
+  process.exit(1)
+})
 
 startServer()

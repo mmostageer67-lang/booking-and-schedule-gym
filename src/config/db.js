@@ -7,8 +7,17 @@ const connectDB = async () => {
     throw new Error('MONGO_URI is not defined')
   }
 
+  mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err)
+  })
+
+  mongoose.connection.on('disconnected', () => {
+    console.warn('MongoDB disconnected')
+  })
+
   const connection = await mongoose.connect(mongoUri, {
-    serverSelectionTimeoutMS: 10000
+    serverSelectionTimeoutMS: 10000,
+    maxPoolSize: 10
   })
 
   console.log(`MongoDB connected: ${connection.connection.host}/${connection.connection.name}`)
@@ -23,4 +32,3 @@ const disconnectDB = async () => {
 }
 
 module.exports = { connectDB, disconnectDB }
-

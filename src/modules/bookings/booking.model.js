@@ -18,9 +18,17 @@ const bookingSchema = new mongoose.Schema({
   },
   bookingDate: {
     type: Date,
-    default: Date.now
+    default: () => new Date()
   }
 }, { timestamps: true })
+
+bookingSchema.index(
+  { user: 1, class: 1 },
+  { partialFilterExpression: { status: { $ne: 'cancelled' } }, unique: true }
+)
+bookingSchema.index({ user: 1 })
+bookingSchema.index({ class: 1 })
+bookingSchema.index({ status: 1 })
 
 const cleanTransform = (doc, ret) => {
   ret.id = ret._id
